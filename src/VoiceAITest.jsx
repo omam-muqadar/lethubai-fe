@@ -1,7 +1,7 @@
 import { useState } from "react";
 import axios from "axios";
 
-const API_PROD = "https://automsc.azurewebsites.net/";
+const API_PROD = "https://lethubai.azurewebsites.net/";
 // const API_LOCAL = "http://localhost:3000/";
 
 const VoiceAITest = () => {
