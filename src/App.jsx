@@ -1,40 +1,35 @@
-// import { useState } from "react";
-// import reactLogo from "./assets/react.svg";
-// import viteLogo from "/vite.svg";
+import { useState } from "react";
 import "./App.css";
-// import VoiceAI from "./voiceai";
+import VoiceAI from "./voiceai";
 import VoiceAITest from "./VoiceAITest";
-// import WhisperTranscriber from "./whisper";
 
 function App() {
-  // const [count, setCount] = useState(0);
+  const [type, setType] = useState("assistant");
 
   return (
-    <>
-      <VoiceAITest />
-      {/* <WhisperTranscriber /> */}
-      {/* <VoiceAI /> */}
-      {/* <div>
-        <a href="https://vite.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
-      </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
+    <div className="text-center relative">
+      <div className="inline-block gap-x-2 mb-3">
+        <button
+          onClick={() => setType("ssrtts")}
+          className={`px-4 py-2 ${
+            type === "ssrtts" ? "!border-2 !border-blue-500 !font-bold" : ""
+          }`}
+        >
+          STT & TTS
         </button>
-        <p>
-          Edit <code>src/App.jsx</code> and save to test HMR
-        </p>
+        &nbsp; &nbsp;
+        <button
+          onClick={() => setType("assistant")}
+          className={`px-4 py-2 ${
+            type === "assistant" ? "!border-2 !border-blue-500 !font-bold" : ""
+          }`}
+        >
+          AI Voice Assistant
+        </button>
       </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p> */}
-    </>
+      {type === "ssrtts" && <VoiceAITest />}
+      {type === "assistant" && <VoiceAI />}
+    </div>
   );
 }
 

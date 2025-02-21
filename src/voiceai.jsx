@@ -1,35 +1,33 @@
-import { useState, useRef } from "react";
+import { useState } from "react";
 import axios from "axios";
-import { AudioRecorder } from "react-audio-recorder";
+import { ReactMic } from "react-mic";
+import { API_ENDPOINT } from "./env";
 
 const VoiceAI = () => {
-  const [audioFile, setAudioFile] = useState(null);
+  const [recording, setRecording] = useState(false);
+  const [audioBlob, setAudioBlob] = useState(null);
   const [aiResponseAudio, setAiResponseAudio] = useState(null);
-  const audioRef = useRef(null);
 
-  // Handle recorded audio
-  const handleAudioRecorded = (audioBlob) => {
-    setAudioFile(audioBlob);
+  const startRecording = () => setRecording(true);
+  const stopRecording = () => setRecording(false);
+
+  const onStop = (recordedBlob) => {
+    setAudioBlob(recordedBlob.blob);
   };
 
-  // Upload audio & get AI response
   const handleUpload = async () => {
-    if (!audioFile) {
+    if (!audioBlob) {
       alert("Please record audio first!");
       return;
     }
 
     const formData = new FormData();
-    formData.append("audio", audioFile, "input-audio.wav");
+    formData.append("audio", audioBlob, "input-audio.wav");
 
     try {
-      const response = await axios.post(
-        "http://localhost:3000/voice-ai",
-        formData,
-        {
-          responseType: "blob", // Expecting audio file in response
-        }
-      );
+      const response = await axios.post(API_ENDPOINT + "voice-ai", formData, {
+        responseType: "blob", // Expecting audio file in response
+      });
 
       const audioUrl = URL.createObjectURL(response.data);
       setAiResponseAudio(audioUrl);
@@ -44,22 +42,39 @@ const VoiceAI = () => {
       <h2 className="text-lg font-semibold mb-2">🎙️ AI Voice Assistant</h2>
 
       {/* Audio Recorder */}
-      <AudioRecorder
-        onRecordingComplete={handleAudioRecorded}
-        audioType="audio/wav"
-        showVisualizer={true}
+      <ReactMic
+        record={recording}
+        className="border rounded"
+        onStop={onStop}
+        mimeType="audio/wav"
+        visualSetting="sinewave"
       />
+
+      <div className="mt-2 flex gap-2">
+        <button
+          onClick={startRecording}
+          className="px-4 py-2 bg-green-500 text-white rounded"
+        >
+          Start
+        </button>
+        <button
+          onClick={stopRecording}
+          className="px-4 py-2 bg-red-500 text-white rounded"
+        >
+          Stop
+        </button>
+      </div>
 
       <button
         onClick={handleUpload}
-        className="mt-3 px-4 py-2 bg-blue-500 text-white rounded hover:bg-blue-600"
+        className="mt-3 px-4 py-2 bg-blue-500 text-white rounded"
       >
         Upload & Get AI Response
       </button>
 
       {/* Playback AI response */}
       {aiResponseAudio && (
-        <audio controls ref={audioRef} className="mt-4">
+        <audio controls className="mt-4">
           <source src={aiResponseAudio} type="audio/mp3" />
           Your browser does not support the audio element.
         </audio>

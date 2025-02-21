@@ -1,8 +1,6 @@
 import { useState } from "react";
 import axios from "axios";
-
-const API_PROD = "https://lethubai.azurewebsites.net/";
-// const API_LOCAL = "http://localhost:3000/";
+import { API_ENDPOINT } from "./env";
 
 const VoiceAITest = () => {
   const [audioFile, setAudioFile] = useState(null);
@@ -27,7 +25,7 @@ const VoiceAITest = () => {
 
     try {
       console.log("Sending audio file...");
-      const response = await axios.post(API_PROD + "stt", formData);
+      const response = await axios.post(API_ENDPOINT + "stt", formData);
       console.log("STT Response:", response.data);
       setTranscription(response.data.transcription);
     } catch (error) {
@@ -46,7 +44,7 @@ const VoiceAITest = () => {
     try {
       console.log("Sending text for TTS:", textInput);
       const response = await axios.post(
-        API_PROD + "tts",
+        API_ENDPOINT + "tts",
         {
           text: textInput,
         },
