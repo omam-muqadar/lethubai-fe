@@ -64,7 +64,7 @@ const VoiceAITest = () => {
   return (
     <div className="p-6 max-w-md !text-gray-500 mx-auto bg-white rounded-2xl shadow-lg flex flex-col items-center space-y-4">
       <h2 className="text-xl font-semibold text-gray-900 flex items-center space-x-2">
-        <span>🗣️</span> <span>AI Voice Test</span>
+        <span>🗣️</span> <span>STT & TTS</span>
       </h2>
 
       {/* File Upload */}

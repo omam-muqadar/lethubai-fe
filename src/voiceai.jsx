@@ -7,6 +7,7 @@ const VoiceAI = () => {
   const [recording, setRecording] = useState(false);
   const [audioBlob, setAudioBlob] = useState(null);
   const [aiResponseAudio, setAiResponseAudio] = useState(null);
+  const [withAPI, setWithAPI] = useState(false);
 
   const startRecording = () => setRecording(true);
   const stopRecording = () => setRecording(false);
@@ -25,9 +26,14 @@ const VoiceAI = () => {
     formData.append("audio", audioBlob, "input-audio.wav");
 
     try {
-      const response = await axios.post(API_ENDPOINT + "voice-ai", formData, {
-        responseType: "blob", // Expecting audio file in response
-      });
+      const endpoint = withAPI ? "voice-ai-weather" : "voice-ai";
+      const response = await axios.post(
+        `${API_ENDPOINT}${endpoint}`,
+        formData,
+        {
+          responseType: "blob", // Expecting audio file in response
+        }
+      );
 
       const audioUrl = URL.createObjectURL(response.data);
       setAiResponseAudio(audioUrl);
@@ -39,8 +45,18 @@ const VoiceAI = () => {
 
   return (
     <div className="p-4 flex flex-col items-center">
-      <h2 className="text-lg font-semibold mb-2">🎙️ AI Voice Assistant</h2>
-
+      <h2 className="text-lg font-semibold mb-2">🎙️ Voice Chat Record</h2>
+      <div className="mb-4">
+        <label className="flex items-center">
+          <input
+            type="checkbox"
+            checked={withAPI}
+            onChange={(e) => setWithAPI(e.target.checked)}
+            className="mr-2"
+          />
+          Weather API
+        </label>
+      </div>
       {/* Audio Recorder */}
       <ReactMic
         record={recording}
